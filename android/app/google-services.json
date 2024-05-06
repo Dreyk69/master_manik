@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1029651416433",
+    "project_id": "ananasik-nails",
+    "storage_bucket": "ananasik-nails.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1029651416433:android:89ea42b3a734090a3be2d0",
+        "android_client_info": {
+          "package_name": "com.example.ananasik_nails"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxyBCz59bbr28LxoJ26EgZXTtQuWCZMpw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

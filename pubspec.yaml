@@ -1,0 +1,43 @@
+name: ananasik_nails
+description: "A new Flutter project."
+
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.2.6 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # firebase
+  firebase_core: ^2.25.5
+  firebase_auth: ^4.17.7
+  cloud_firestore: ^4.15.8
+  firebase_storage:
+  # BLoC
+  flutter_bloc: ^8.1.4
+  equatable: ^2.0.5
+  # GetIt
+  get_it: ^7.6.7
+  # Для фоточек:
+  image_picker: ^1.0.7
+  image_cropper: ^5.0.1
+  # Календарь:
+  table_calendar: ^3.1.1
+
+  cupertino_icons: ^1.0.2
+  email_validator: ^2.1.17
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^3.0.2
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/image/
