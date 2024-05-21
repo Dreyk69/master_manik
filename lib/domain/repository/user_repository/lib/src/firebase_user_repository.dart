@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:uuid/uuid.dart';
 import '../user_repository.dart';
 
 class FirebaseUserRepository implements UserRepository {
@@ -155,5 +156,54 @@ class FirebaseUserRepository implements UserRepository {
       log(e.toString());
       rethrow;
     }
+  }
+
+  @override
+  Future<List<dynamic>> uploadListPicture(String file, String userId) async {
+    try {
+      var uuid = const Uuid();
+      final String randomId = uuid.v4();
+      File imageFile = File(file);
+      Reference firebaseStoreRef =
+          FirebaseStorage.instance.ref().child('$userId/SpisokFotoRabot/${randomId}_lead');
+      await firebaseStoreRef.putFile(imageFile);
+      String url = await firebaseStoreRef.getDownloadURL();
+      DocumentSnapshot userSnapshot  = await manicuristCollection.doc(userId).get();
+      Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+      List<dynamic> currentPhotoList = userData['photoRabot'];
+      if (currentPhotoList[0] != '') {
+        currentPhotoList.add(url);
+      } else {
+        currentPhotoList[0] = url;
+      }
+      await manicuristCollection.doc(userId).update({'photoRabot': currentPhotoList});
+      return currentPhotoList;
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<Map<String, int>>> uploadListUslug(String usluga, String cena, String userId) async {
+    DocumentSnapshot userSnapshot  = await manicuristCollection.doc(userId).get();
+    Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+    List<dynamic> uslugiDynamicList = userData['uslugi'];
+    List<Map<String, int>> currentUslugiList = [];
+    currentUslugiList = uslugiDynamicList.map((item) {
+      if (item is Map) {
+        return item.map((key, value) => MapEntry(key.toString(), value as int));
+      } else {
+        return <String, int>{}; // Вернуть пустую карту, если элемент не карта
+      }
+    }).toList();
+    int cena1 = int.parse(cena);
+    if (currentUslugiList[0].isNotEmpty) {
+      currentUslugiList.add({usluga: cena1});
+    } else {
+      currentUslugiList[0] = {usluga: cena1};
+    }
+    await manicuristCollection.doc(userId).update({'uslugi': currentUslugiList});
+    return currentUslugiList;
   }
 }

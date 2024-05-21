@@ -9,8 +9,7 @@ class MyManicurist extends Equatable {
   final String name;
   String? avatar;
   final List<String> photoRabot;
-  final List<String> uslugi;
-  final List<int> cena;
+  final List<Map<String, int>> uslugi;
 
   MyManicurist({
     required this.id,
@@ -19,7 +18,6 @@ class MyManicurist extends Equatable {
     this.avatar,
     required this.photoRabot,
     required this.uslugi,
-    required this.cena,
   });
 
   static MyManicurist empty = MyManicurist(
@@ -28,8 +26,7 @@ class MyManicurist extends Equatable {
     name: '',
     avatar: '',
     photoRabot: [''],
-    uslugi: [''],
-    cena: [],
+    uslugi: [{}],
   );
 
   MyManicurist copyWith({
@@ -38,8 +35,7 @@ class MyManicurist extends Equatable {
     String? name,
     String? avatar,
     List<String>? photoRabot,
-    List<String>? uslugi,
-    List<int>? cena,
+    List<Map<String, int>>? uslugi,
   }) {
     return MyManicurist(
       id: id ?? this.id,
@@ -48,7 +44,6 @@ class MyManicurist extends Equatable {
       avatar: avatar ?? this.avatar,
       photoRabot: photoRabot ?? this.photoRabot,
       uslugi: uslugi ?? this.uslugi,
-      cena: cena ?? this.cena,
     );
   }
 
@@ -64,7 +59,6 @@ class MyManicurist extends Equatable {
       avatar: avatar,
       photoRabot: photoRabot,
       uslugi: uslugi,
-      cena: cena,
     );
   }
 
@@ -76,14 +70,10 @@ class MyManicurist extends Equatable {
       avatar: entity.avatar,
       photoRabot: entity.photoRabot,
       uslugi: entity.uslugi,
-      cena: entity.cena,
     );
   }
 
   @override
   List<Object?> get props =>
-      [id, email, name, avatar, photoRabot, uslugi, cena];
+      [id, email, name, avatar, photoRabot, uslugi];
 }
-
-//  android:name=".MainActivity"
-            // android:theme="@style/LaunchTheme"

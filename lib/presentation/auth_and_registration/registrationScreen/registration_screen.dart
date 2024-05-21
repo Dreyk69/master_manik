@@ -164,7 +164,7 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                                 nameController: nameController);
                           },
                           decoration: StylesTextField(
-                            hintText: 'Введите Email',
+                            hintText: 'Введите ФИО',
                             prefixIcon: nameIcon,
                             errorText: _errorMsgForName,
                           ),

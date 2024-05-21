@@ -6,8 +6,7 @@ class MyManicuristEntity extends Equatable {
   final String name;
   final String? avatar;
   final List<String> photoRabot;
-  final List<String> uslugi;
-  final List<int> cena;
+  final List<Map<String, int>> uslugi;
 
   const MyManicuristEntity({
     required this.id,
@@ -16,7 +15,6 @@ class MyManicuristEntity extends Equatable {
     this.avatar,
     required this.photoRabot,
     required this.uslugi,
-    required this.cena,
   });
 
   Map<String, Object?> toDocument() {
@@ -27,7 +25,6 @@ class MyManicuristEntity extends Equatable {
       'avatar': avatar,
       'photoRabot': photoRabot,
       'uslugi': uslugi,
-      'cena': cena,
     };
   }
 
@@ -38,14 +35,13 @@ class MyManicuristEntity extends Equatable {
       name: doc['name'] as String,
       avatar: doc['avatar'] as String?,
       photoRabot: doc['photoRabot'] as List<String>,
-      uslugi: doc['uslugi'] as List<String>,
-      cena: doc['cena'] as List<int>,
+      uslugi: doc['uslugi'] as List<Map<String, int>>,
     );
   }
 
   @override
   List<Object?> get props =>
-      [id, email, name, avatar, photoRabot, uslugi, cena];
+      [id, email, name, avatar, photoRabot, uslugi];
 
   @override
   String toString() {
@@ -56,7 +52,6 @@ class MyManicuristEntity extends Equatable {
       avatar: $avatar
       photoRabot: $photoRabot
       uslugi: $uslugi
-      cena: $cena
     }''';
   }
 }

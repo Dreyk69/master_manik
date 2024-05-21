@@ -10,3 +10,7 @@ IconData eysIcon = CupertinoIcons.eye_fill;
 IconData eysOffIcon = CupertinoIcons.eye_slash_fill;
 
 Icon nameIcon = const Icon(CupertinoIcons.person_fill);
+
+Icon plusikIcon = const Icon(Icons.add);
+
+Icon strelochkaIcon = const Icon(Icons.arrow_forward);

@@ -25,4 +25,8 @@ abstract class UserRepository {
   Future<MyManicurist> getMyManicurist(String myManicuristId);
 
   Future<String> uploadPicture(String file, String userId);
+
+  Future<List<dynamic>> uploadListPicture(String file, String userId);
+
+  Future<List<Map<String, int>>> uploadListUslug(String usluga, String cena, String userId);
 }

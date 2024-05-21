@@ -13,12 +13,31 @@ class UpdateUserInfoBloc
       : _userRepository = userRepository,
         super(UpdateUserInfoInitial()) {
     on<UploadPicture>((event, emit) async {
-      emit(UploadPictureProcess());
+      emit(UploadProcess());
       try {
         String userImage = await _userRepository.uploadPicture(event.file, event.userId);
         emit(UploadPictureSuccess(userImage));
       } catch (e) {
-        emit(UploadPictureFailure());
+        emit(UploadFailure());
+      }
+    });
+    on<UploadListPicture>((event, emit) async {
+      emit(UploadProcess());
+      try {
+        List<dynamic> updateListPhoto = await _userRepository.uploadListPicture(event.file, event.userId);
+        emit(UploadListPictureSuccess(updateListPhoto));
+      } catch (e) {
+        emit(UploadFailure());
+      }
+    });
+    
+    on<UploadListUslug>((event, emit) async {
+      emit(UploadProcess());
+      try {
+        List<Map<String, int>> updateListUslug = await _userRepository.uploadListUslug(event.usluga, event.cena, event.userId);
+        emit(UploadListUslugSuccess(updateListUslug));
+      } catch (e) {
+        emit(UploadFailure());
       }
     });
   }

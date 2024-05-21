@@ -18,6 +18,24 @@ class UploadPictureSuccess extends UpdateUserInfoState {
   List<Object> get props => [userImage];
 }
 
-class UploadPictureFailure extends UpdateUserInfoState {}
+class UploadListPictureSuccess extends UpdateUserInfoState {
+  final  List<dynamic> updateListPhoto;
 
-class UploadPictureProcess extends UpdateUserInfoState {}
+  const UploadListPictureSuccess(this.updateListPhoto);
+
+  @override
+  List<Object> get props => [updateListPhoto];
+}
+
+class UploadListUslugSuccess extends UpdateUserInfoState {
+  final List<Map<String, int>> updateListUslug;
+
+  const UploadListUslugSuccess(this.updateListUslug);
+
+  @override
+  List<Object> get props => [updateListUslug];
+}
+
+class UploadFailure extends UpdateUserInfoState {}
+
+class UploadProcess extends UpdateUserInfoState {}
