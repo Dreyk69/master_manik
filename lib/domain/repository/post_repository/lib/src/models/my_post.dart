@@ -1,28 +1,28 @@
 import 'package:equatable/equatable.dart';
 
-import '../entities/manicurist_entities.dart';
+import '../entities/post_entities.dart';
 
 // ignore: must_be_immutable
-class MyManicurist extends Equatable {
+class MyPost extends Equatable {
   final String id;
   final String email;
   final String name;
   String? avatar;
-  List<String>? photoRabot;
-  List<Map<String, int>>? uslugi;
-  Map<DateTime, List<String>>? okohki;
+  List<String> photoRabot;
+  List<Map<String, int>> uslugi;
+  Map<String, dynamic> okohki;
 
-  MyManicurist({
+  MyPost({
     required this.id,
     required this.email,
     required this.name,
     this.avatar,
-    this.photoRabot,
-    this.uslugi,
-    this.okohki,
+    required this.photoRabot,
+    required this.uslugi,
+    required this.okohki,
   });
 
-  static MyManicurist empty = MyManicurist(
+  static MyPost empty = MyPost(
     id: '',
     email: '',
     name: '',
@@ -32,16 +32,16 @@ class MyManicurist extends Equatable {
     okohki: {},
   );
 
-  MyManicurist copyWith({
+  MyPost copyWith({
     String? id,
     String? email,
     String? name,
     String? avatar,
     List<String>? photoRabot,
     List<Map<String, int>>? uslugi,
-    Map<DateTime, List<String>>? okohki,
+    Map<String, dynamic>? okohki,
   }) {
-    return MyManicurist(
+    return MyPost(
       id: id ?? this.id,
       email: email ?? this.email,
       name: name ?? this.name,
@@ -52,12 +52,12 @@ class MyManicurist extends Equatable {
     );
   }
 
-  bool get isEmpty => this == MyManicurist.empty;
+  bool get isEmpty => this == MyPost.empty;
 
-  bool get isNotEmpty => this != MyManicurist.empty;
+  bool get isNotEmpty => this != MyPost.empty;
 
-  MyManicuristEntity toEntity() {
-    return MyManicuristEntity(
+  MyPostEntity toEntity() {
+    return MyPostEntity(
       id: id,
       email: email,
       name: name,
@@ -68,8 +68,8 @@ class MyManicurist extends Equatable {
     );
   }
 
-  static MyManicurist fromEntity(MyManicuristEntity entity) {
-    return MyManicurist(
+  static MyPost fromEntity(MyPostEntity entity) {
+    return MyPost(
       id: entity.id,
       email: entity.email,
       name: entity.name,

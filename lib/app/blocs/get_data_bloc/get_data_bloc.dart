@@ -18,6 +18,7 @@ class GetDataBloc extends Bloc<GetDataEvent, GetDataState> {
         super(GetDataInitial()) {
     _userSubscription = userRepository.user.listen((authUser) {
       add(GetDataUser(authUser));
+      add(GetDataZapisUser(authUser));
     });
     on<GetDataUser>((event, emit) async {
       emit(GetDataProcess());
@@ -32,6 +33,7 @@ class GetDataBloc extends Bloc<GetDataEvent, GetDataState> {
       if (client.docs.isNotEmpty) {
         DocumentSnapshot userSnapshot =
             await firestore.collection('client').doc(id).get();
+        
         Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
         emit(GetDataSuccess(client: userData));
       } else if (manicurist.docs.isNotEmpty) {
@@ -43,11 +45,35 @@ class GetDataBloc extends Bloc<GetDataEvent, GetDataState> {
         emit(GetDataFailure());
       }
     });
-
-    @override
+    on<GetDataZapisUser>((event, emit) async {
+      emit(GetDataZapisProcess());
+      final id = event.user?.uid.toString();
+      QuerySnapshot client =
+          await firestore.collection('client').where('id', isEqualTo: id).get();
+      QuerySnapshot manicurist = await firestore
+          .collection('manicurist')
+          .where('id', isEqualTo: id)
+          .get();
+      if (client.docs.isNotEmpty) {
+        CollectionReference appointments =
+            firestore.collection('client').doc(id).collection('zapis');
+            QuerySnapshot querySnapshot = await appointments.get();
+      final allData = querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();   
+          emit(GetDataZapisSuccess(zapis: allData));
+      } else if (manicurist.docs.isNotEmpty) {
+        CollectionReference appointments =
+            firestore.collection('manicurist').doc(id).collection('zapis');
+      QuerySnapshot querySnapshot = await appointments.get();
+      final allData = querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+          emit(GetDataZapisSuccess(zapis: allData));
+      } else {
+        emit(GetDataZapisFailure());
+      }
+    });
+  }
+  @override
     Future<void> close() {
       _userSubscription.cancel();
       return super.close();
     }
-  }
 }

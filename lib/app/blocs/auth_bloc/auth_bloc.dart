@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ananasik_nails/domain/repository/post_repository/lib/post_repository.dart';
 import 'package:ananasik_nails/domain/repository/user_repository/lib/user_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,10 +11,11 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserRepository userRepository;
+  final PostRepository postRepository;
   late final StreamSubscription<User?> _userSubscription;
 
-  AuthBloc({required UserRepository myUserRepository})
-      : userRepository = myUserRepository,
+  AuthBloc({required UserRepository myUserRepository, required PostRepository myPostRepository})
+      : userRepository = myUserRepository, postRepository = myPostRepository,
         super(const AuthState.unknown()) {
     _userSubscription = userRepository.user.listen((authUser) {
       add(AuthUserChanged(authUser));

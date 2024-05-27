@@ -1,22 +1,22 @@
 import 'package:equatable/equatable.dart';
 
-class MyManicuristEntity extends Equatable {
+class MyPostEntity extends Equatable {
   final String id;
   final String email;
   final String name;
   final String? avatar;
-  final List<String>? photoRabot;
-  final List<Map<String, int>>? uslugi;
-  final Map<DateTime, List<String>>? okohki;
+  final List<String> photoRabot;
+  final List<Map<String, int>> uslugi;
+  final Map<String, dynamic> okohki;
 
-  const MyManicuristEntity({
+  const MyPostEntity({
     required this.id,
     required this.email,
     required this.name,
     this.avatar,
-    this.photoRabot,
-    this.uslugi,
-    this.okohki,
+    required this.photoRabot,
+    required this.uslugi,
+    required this.okohki,
   });
 
   Map<String, Object?> toDocument() {
@@ -31,15 +31,15 @@ class MyManicuristEntity extends Equatable {
     };
   }
 
-  static MyManicuristEntity fromDocument(Map<String, dynamic> doc) {
-    return MyManicuristEntity(
+  static MyPostEntity fromDocument(Map<String, dynamic> doc) {
+    return MyPostEntity(
       id: doc['id'] as String,
       email: doc['email'] as String,
       name: doc['name'] as String,
       avatar: doc['avatar'] as String?,
-      photoRabot: doc['photoRabot'] as List<String>?,
-      uslugi: doc['uslugi'] as List<Map<String, int>>?,
-      okohki: doc['okohki'] as Map<DateTime, List<String>>?,
+      photoRabot: doc['photoRabot'] as List<String>,
+      uslugi: doc['uslugi'] as List<Map<String, int>>,
+      okohki: doc['okohki'] as Map<String, dynamic>,
     );
   }
 
@@ -49,7 +49,7 @@ class MyManicuristEntity extends Equatable {
 
   @override
   String toString() {
-    return '''ManicuristEntity: {
+    return '''PostEntity: {
       id: $id
       email: $email
       name: $name

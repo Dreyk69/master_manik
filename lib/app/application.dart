@@ -1,4 +1,6 @@
 import 'package:ananasik_nails/app/blocs/identification_bloc/identification_bloc.dart';
+import 'package:ananasik_nails/app/blocs/post_bloc/post_bloc.dart';
+import 'package:ananasik_nails/domain/repository/post_repository/lib/post_repository.dart';
 import 'package:ananasik_nails/domain/repository/user_repository/lib/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,14 +13,17 @@ import 'blocs/update_user_info_bloc/update_user_info_bloc.dart';
 
 class Application extends StatelessWidget {
   final UserRepository userRepository;
-  const Application(this.userRepository, {super.key});
+  final PostRepository postRepository;
+  const Application(this.userRepository, this.postRepository, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
         providers: [
           RepositoryProvider<AuthBloc>(
-              create: (_) => AuthBloc(myUserRepository: userRepository))
+              create: (_) => AuthBloc(
+                  myUserRepository: userRepository,
+                  myPostRepository: postRepository)),
         ],
         child: MultiBlocProvider(
           providers: [
@@ -34,7 +39,9 @@ class Application extends StatelessWidget {
             BlocProvider<IdentificationBloc>(
                 create: (_) =>
                     IdentificationBloc(myUserRepository: userRepository)),
-// RepositoryProvider почитать про него поподробнее
+            BlocProvider<PostBloc>(
+                create: (_) =>
+                    PostBloc(myPostRepository: postRepository)),
           ],
           child: ApplicationView(),
         ));

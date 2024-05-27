@@ -1,4 +1,5 @@
 import 'package:ananasik_nails/app/blocs/update_user_info_bloc/update_user_info_bloc.dart';
+import 'package:ananasik_nails/domain/repository/post_repository/lib/post_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -6,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../../app/blocs/auth_bloc/auth_bloc.dart';
 import '../../../../../app/blocs/get_data_bloc/get_data_bloc.dart';
+import '../../../../../app/blocs/post_bloc/post_bloc.dart';
 import '../../../../../constants/styles/icons.dart';
 import '../../../../../constants/styles/images.dart';
 
@@ -21,17 +23,13 @@ class ProfileManicuristScreen extends StatefulWidget {
 
 class _ProfileManicuristScreenState extends State<ProfileManicuristScreen> {
   bool _signInRequired = false;
+  
   DateTime today = DateTime.now();
   void _onDaySelected(DateTime day, DateTime focusedDay) {
     setState(() {
       today = day;
     });
   }
-
-  // the selected value
-  String? _dropdownvalue1;
-  // the selected value
-  String? _dropdownvalue2;
 
   var items1 = [
     '12:00',
@@ -50,12 +48,13 @@ class _ProfileManicuristScreenState extends State<ProfileManicuristScreen> {
   String textField2Value = '';
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext globalContext) {
     return BlocProvider(
-      create: (context) => GetDataBloc(
-          myUserRepository: context.read<AuthBloc>().userRepository),
+      create: (userRepositoryContext) => GetDataBloc(
+          myUserRepository:
+              userRepositoryContext.read<AuthBloc>().userRepository),
       child: BlocBuilder<GetDataBloc, GetDataState>(
-        builder: (context, state) {
+        builder: (getDataContext, state) {
           Image avatarPhoto;
           List<dynamic> spisokfotorabot = [''];
           bool photoRabot;
@@ -115,8 +114,7 @@ class _ProfileManicuristScreenState extends State<ProfileManicuristScreen> {
                     return item.map(
                         (key, value) => MapEntry(key.toString(), value as int));
                   } else {
-                    return <String,
-                        int>{};
+                    return <String, int>{};
                   }
                 }).toList();
                 spisokUslugBool = false;
@@ -130,10 +128,12 @@ class _ProfileManicuristScreenState extends State<ProfileManicuristScreen> {
             spisokUslugBool = true;
           }
           return BlocProvider(
-            create: (context) => UpdateUserInfoBloc(
-                userRepository: context.read<AuthBloc>().userRepository),
+            create: (userRepositoryContext) => UpdateUserInfoBloc(
+                userRepository:
+                    userRepositoryContext.read<AuthBloc>().userRepository),
             child: BlocBuilder<UpdateUserInfoBloc, UpdateUserInfoState>(
-              builder: (context, state) {
+              builder: (updateUserInfoContext, state) {
+                // -----------------------------------------------------------------------------------------------------------
                 if (state is UploadPictureSuccess) {
                   avatarPhoto = Image.network(
                     state.userImage,
@@ -156,112 +156,70 @@ class _ProfileManicuristScreenState extends State<ProfileManicuristScreen> {
                     ),
                     floatingActionButton: FloatingActionButton.extended(
                       label: const Text('Опубликовать'),
-                      onPressed: () async {
-                        DateTime? newData = await showDatePicker(
-                            context: context,
-                            initialDate: today,
-                            firstDate: DateTime(1900),
-                            lastDate: DateTime(2100));
-                        // ignore: curly_braces_in_flow_control_structures
-                        if (newData == null)
-                          return;
-                        else {
-                          // ignore: use_build_context_synchronously
-                          return showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                    title:
-                                        const Text('Выбырите время и услугу'),
-                                    content: Row(
-                                      children: [
-                                        const SizedBox(
-                                          width: 20,
-                                        ),
-                                        DropdownButton<String>(
-                                          hint: const Center(
-                                              child: Text(
-                                            '',
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          )),
-                                          value: _dropdownvalue1,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _dropdownvalue1 = value;
-                                            });
-                                          },
-                                          items: items1.map((e) {
-                                            return DropdownMenuItem(
-                                              value: e,
-                                              child: Text(
-                                                e,
-                                                style: const TextStyle(
-                                                    color: Colors.black),
-                                              ),
-                                            );
-                                          }).toList(),
-                                        ),
-                                        const SizedBox(
-                                          width: 20,
-                                        ),
-                                        SizedBox(
-                                          child: DropdownButton<String>(
-                                            hint: const Center(
-                                                child: Text(
-                                              '',
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            )),
-                                            value: _dropdownvalue2,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                _dropdownvalue2 = value;
-                                              });
-                                            },
-                                            items: items2.map((e) {
-                                              return DropdownMenuItem(
-                                                value: e,
-                                                child: SizedBox(
-                                                  width: 150,
-                                                  child: Flexible(
-                                                    flex: 1,
-                                                    child: Text(
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                      e,
-                                                      style: const TextStyle(
-                                                          color: Colors.black),
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            }).toList(),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          // Действие при нажатии на кнопку
-                                          Navigator.of(context)
-                                              .pop(); // Закрываем AlertDialog
-                                        },
-                                        child:
-                                            Text('Отмена'), // Текст на кнопке
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          // Действие при нажатии на кнопку
-                                          // Можно добавить свою логику здесь
-                                        },
-                                        child:
-                                            Text('Принять'), // Текст на кнопке
-                                      ),
-                                    ],
-                                  ));
+                      onPressed: () {
+                        MyPost myPost = MyPost.empty;
+                        List<String> spisokfotorabotStr = spisokfotorabot
+                            .map((item) => item.toString())
+                            .toList(); 
+                        Map<DateTime, List<String>> convertMap(
+                            Map<String, dynamic>? inputMap) {
+                          // Проверка на null
+                          if (inputMap == null) {
+                            return {};
+                          }
+
+                          Map<DateTime, List<String>> dateTimeMap = {};
+
+                          // Проход по каждому элементу исходного Map
+                          inputMap.forEach((key, value) {
+                            try {
+                              // Преобразование ключа в DateTime
+                              DateTime date = DateTime.parse(key);
+
+                              // Проверка и преобразование значения в List<String>
+                              if (value is List<dynamic>) {
+                                List<String> stringList = value
+                                    .map((item) => item.toString())
+                                    .toList();
+                                dateTimeMap[date] = stringList;
+                              }
+                            } catch (e) {
+                              // Обработка ошибок преобразования
+                              print(
+                                  'Error parsing key $key or value $value: $e');
+                            }
+                          });
+
+                          return dateTimeMap;
                         }
+                        Map<DateTime, List<String>> spisokOkohek = convertMap(dataUser?['okohki']);
+                        Map<String, dynamic> okohkiToSave = spisokOkohek.map((key, value) => MapEntry(
+          key.toIso8601String(),
+          value,
+        ));
+                        if (dataUser?['avatar'] != '') {
+                          myPost = myPost.copyWith(
+                            id: dataUser?['id'],
+                            email: dataUser?['email'],
+                            name: dataUser?['name'],
+                            avatar: dataUser?['avatar'],
+                            photoRabot: spisokfotorabotStr,
+                            uslugi: uslugiList,
+                            okohki: okohkiToSave,
+                          );
+                        } else {
+                          myPost = myPost.copyWith(
+                            id: dataUser?['id'],
+                            email: dataUser?['email'],
+                            name: dataUser?['name'],
+                            photoRabot: spisokfotorabotStr,
+                            uslugi: uslugiList,
+                            okohki: okohkiToSave,
+                          );
+                        }
+                        setState(() {
+                          globalContext.read<PostBloc>().add(SetPost(myPost));
+                        });
                       },
                     ),
                     body: !_signInRequired
@@ -323,7 +281,8 @@ class _ProfileManicuristScreenState extends State<ProfileManicuristScreen> {
                                                 );
                                                 if (croppedFile != null) {
                                                   setState(() {
-                                                    context
+                                                    // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                    updateUserInfoContext
                                                         .read<
                                                             UpdateUserInfoBloc>()
                                                         .add(UploadPicture(
@@ -437,7 +396,8 @@ class _ProfileManicuristScreenState extends State<ProfileManicuristScreen> {
                                                   );
                                                   if (croppedFile != null) {
                                                     setState(() {
-                                                      context
+                                                      // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                      updateUserInfoContext
                                                           .read<
                                                               UpdateUserInfoBloc>()
                                                           .add(
@@ -559,7 +519,8 @@ class _ProfileManicuristScreenState extends State<ProfileManicuristScreen> {
                                                             236))),
                                             onPressed: () async {
                                               showDialog<void>(
-                                                context: context,
+                                                context: updateUserInfoContext,
+                                                // -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
                                                 barrierDismissible: false,
                                                 builder:
                                                     (BuildContext context) {
@@ -603,7 +564,7 @@ class _ProfileManicuristScreenState extends State<ProfileManicuristScreen> {
                                                       ),
                                                       TextButton(
                                                         onPressed: () {
-                                                          context
+                                                          updateUserInfoContext
                                                               .read<
                                                                   UpdateUserInfoBloc>()
                                                               .add(UploadListUslug(
@@ -708,23 +669,112 @@ class _ProfileManicuristScreenState extends State<ProfileManicuristScreen> {
 }
 
 
-// showDialog(
-                        //     context: context,
-                        //     builder: (BuildContext context) => AlertDialog(
-                        //         title: const Text('Выберите дату и время'),
-                        //         content: SizedBox(
-                        //           width: 100,
-                        //           height: 100,
-                        //           child: TableCalendar(
-                        //             rowHeight: 43,
-                        //             headerStyle: const HeaderStyle(
-                        //                 formatButtonVisible: false,
-                        //                 titleCentered: true),
-                        //             availableGestures: AvailableGestures.all,
-                        //             selectedDayPredicate: (day) => isSameDay(day, today),
-                        //             focusedDay: today,
-                        //             firstDay: DateTime.utc(2010, 10, 16),
-                        //             lastDay: DateTime.utc(2030, 3, 14),
-                        //             onDaySelected: _onDaySelected,
-                        //           ),
-                        //         )));
+// {
+//                         DateTime? newData = await showDatePicker(
+//                             context: updateUserInfoContext,
+//                             // ------------------------------------------------------------------------------------------------------------------------------------------
+//                             initialDate: today,
+//                             firstDate: DateTime(1900),
+//                             lastDate: DateTime(2100));
+//                         // ignore: curly_braces_in_flow_control_structures
+//                         if (newData == null)
+//                           return;
+//                         else {
+//                           // ignore: use_build_context_synchronously
+//                           return showDialog(
+//                               context: updateUserInfoContext,
+//                               // ----------------------------------------------------------------------------------------------------------------------------------------------------
+//                               builder: (BuildContext context) => AlertDialog(
+//                                     title:
+//                                         const Text('Выбырите время и услугу'),
+//                                     content: Row(
+//                                       children: [
+//                                         const SizedBox(
+//                                           width: 20,
+//                                         ),
+//                                         DropdownButton<String>(
+//                                           hint: const Center(
+//                                               child: Text(
+//                                             '',
+//                                             style:
+//                                                 TextStyle(color: Colors.white),
+//                                           )),
+//                                           value: _dropdownvalue1,
+//                                           onChanged: (value) {
+//                                             setState(() {
+//                                               _dropdownvalue1 = value;
+//                                             });
+//                                           },
+//                                           items: items1.map((e) {
+//                                             return DropdownMenuItem(
+//                                               value: e,
+//                                               child: Text(
+//                                                 e,
+//                                                 style: const TextStyle(
+//                                                     color: Colors.black),
+//                                               ),
+//                                             );
+//                                           }).toList(),
+//                                         ),
+//                                         const SizedBox(
+//                                           width: 20,
+//                                         ),
+//                                         SizedBox(
+//                                           child: DropdownButton<String>(
+//                                             hint: const Center(
+//                                                 child: Text(
+//                                               '',
+//                                               style: TextStyle(
+//                                                   color: Colors.white),
+//                                             )),
+//                                             value: _dropdownvalue2,
+//                                             onChanged: (value) {
+//                                               setState(() {
+//                                                 _dropdownvalue2 = value;
+//                                               });
+//                                             },
+//                                             items: items2.map((e) {
+//                                               return DropdownMenuItem(
+//                                                 value: e,
+//                                                 child: SizedBox(
+//                                                   width: 150,
+//                                                   child: Flexible(
+//                                                     flex: 1,
+//                                                     child: Text(
+//                                                       overflow:
+//                                                           TextOverflow.ellipsis,
+//                                                       maxLines: 1,
+//                                                       e,
+//                                                       style: const TextStyle(
+//                                                           color: Colors.black),
+//                                                     ),
+//                                                   ),
+//                                                 ),
+//                                               );
+//                                             }).toList(),
+//                                           ),
+//                                         ),
+//                                       ],
+//                                     ),
+//                                     actions: [
+//                                       TextButton(
+//                                         onPressed: () {
+//                                           // Действие при нажатии на кнопку
+//                                           Navigator.of(context)
+//                                               .pop(); // Закрываем AlertDialog
+//                                         },
+//                                         child:
+//                                             Text('Отмена'), // Текст на кнопке
+//                                       ),
+//                                       ElevatedButton(
+//                                         onPressed: () {
+//                                           // Действие при нажатии на кнопку
+//                                           // Можно добавить свою логику здесь
+//                                         },
+//                                         child:
+//                                             Text('Принять'), // Текст на кнопке
+//                                       ),
+//                                     ],
+//                                   ));
+//                         }
+//                       },

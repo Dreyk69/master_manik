@@ -15,7 +15,8 @@ class UpdateUserInfoBloc
     on<UploadPicture>((event, emit) async {
       emit(UploadProcess());
       try {
-        String userImage = await _userRepository.uploadPicture(event.file, event.userId);
+        String userImage =
+            await _userRepository.uploadPicture(event.file, event.userId);
         emit(UploadPictureSuccess(userImage));
       } catch (e) {
         emit(UploadFailure());
@@ -24,18 +25,56 @@ class UpdateUserInfoBloc
     on<UploadListPicture>((event, emit) async {
       emit(UploadProcess());
       try {
-        List<dynamic> updateListPhoto = await _userRepository.uploadListPicture(event.file, event.userId);
+        List<dynamic> updateListPhoto =
+            await _userRepository.uploadListPicture(event.file, event.userId);
         emit(UploadListPictureSuccess(updateListPhoto));
       } catch (e) {
         emit(UploadFailure());
       }
     });
-    
+
     on<UploadListUslug>((event, emit) async {
       emit(UploadProcess());
       try {
-        List<Map<String, int>> updateListUslug = await _userRepository.uploadListUslug(event.usluga, event.cena, event.userId);
+        List<Map<String, int>> updateListUslug = await _userRepository
+            .uploadListUslug(event.usluga, event.cena, event.userId);
         emit(UploadListUslugSuccess(updateListUslug));
+      } catch (e) {
+        emit(UploadFailure());
+      }
+    });
+
+    on<UploadListOkohek>((event, emit) async {
+      emit(UploadProcess());
+      try {
+        Map<DateTime, List<String>> updateListOkohek = await _userRepository
+            .uploadListOkohek(event.day, event.formattedTime, event.userId);
+        emit(UploadListOkohekSuccess(updateListOkohek));
+      } catch (e) {
+        emit(UploadFailure());
+      }
+    });
+    on<NewZapis>((event, emit) async {
+      emit(UploadProcess());
+      try {
+        await _userRepository.saveZapisClient(
+          id: event.userId,
+          selectedDate: event.selectedDate,
+          selectedTime: event.selectedTime,
+          selectedService: event.selectedService,
+          selectedPrice: event.selectedPrice,
+          nameMaster: event.nameMaster,
+          emailMaster: event.emailMaster,
+        );
+        await _userRepository.saveZapisManicurist(
+          id: event.masterId,
+          selectedDate: event.selectedDate,
+          selectedTime: event.selectedTime,
+          selectedService: event.selectedService,
+          selectedPrice: event.selectedPrice,
+          nameUser: event.nameUser,
+          emailUser: event.emailUser,
+        );
       } catch (e) {
         emit(UploadFailure());
       }

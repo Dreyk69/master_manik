@@ -11,3 +11,7 @@ class GetDataUser extends GetDataEvent {
   final User? user;
   const GetDataUser(this.user);
 }
+class GetDataZapisUser extends GetDataEvent {
+  final User? user;
+  const GetDataZapisUser(this.user);
+}

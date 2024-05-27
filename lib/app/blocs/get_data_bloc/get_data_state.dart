@@ -19,3 +19,15 @@ final class GetDataSuccess extends GetDataState {
 final class GetDataFailure extends GetDataState {}
 
 final class GetDataProcess extends GetDataState {}
+
+final class GetDataZapisInitial extends GetDataState {}
+
+final class GetDataZapisSuccess extends GetDataState {
+  final List<Map<String, dynamic>>? zapis;
+
+  const GetDataZapisSuccess({this.zapis});
+}
+
+final class GetDataZapisFailure extends GetDataState {}
+
+final class GetDataZapisProcess extends GetDataState {}

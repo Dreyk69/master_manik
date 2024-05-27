@@ -33,9 +33,15 @@ class IdentificationBloc
           .get();
 
       if (client.docs.isNotEmpty) {
-        emit(IdentificationClient());
+        if (id != null) {
+          final String idUser = id;
+        emit(IdentificationClient(idUser));
+        }
       } else if (manicurist.docs.isNotEmpty) {
-        emit(IdentificationManicurist());
+        if (id != null) {
+          final String idMaster = id;
+        emit(IdentificationManicurist(idMaster));
+        }
       } else {
         emit(IdentificationFailure());
       }

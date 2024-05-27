@@ -28,5 +28,29 @@ abstract class UserRepository {
 
   Future<List<dynamic>> uploadListPicture(String file, String userId);
 
-  Future<List<Map<String, int>>> uploadListUslug(String usluga, String cena, String userId);
+  Future<List<Map<String, int>>> uploadListUslug(
+      String usluga, String cena, String userId);
+
+  Future<Map<DateTime, List<String>>> uploadListOkohek(
+      DateTime day, String formattedTime, String userId);
+
+  Future<void> saveZapisClient({
+    required String id,
+    required DateTime selectedDate,
+    required String selectedTime,
+    required String selectedService,
+    required int selectedPrice,
+    required String nameMaster,
+    required String emailMaster,
+  });
+
+  Future<void> saveZapisManicurist({
+    required String id,
+    required DateTime selectedDate,
+    required String selectedTime,
+    required String selectedService,
+    required int selectedPrice,
+    required String nameUser,
+    required String emailUser,
+  });
 }

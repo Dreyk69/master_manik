@@ -36,6 +36,15 @@ class UploadListUslugSuccess extends UpdateUserInfoState {
   List<Object> get props => [updateListUslug];
 }
 
+class UploadListOkohekSuccess extends UpdateUserInfoState {
+  final Map<DateTime, List<String>> updateListOkohek;
+
+  const UploadListOkohekSuccess(this.updateListOkohek);
+
+  @override
+  List<Object> get props => [updateListOkohek];
+}
+
 class UploadFailure extends UpdateUserInfoState {}
 
 class UploadProcess extends UpdateUserInfoState {}

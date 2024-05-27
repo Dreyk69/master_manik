@@ -1,4 +1,5 @@
 import 'package:ananasik_nails/presentation/mainScreen/screen/clientScreen/profileClientScreen/profile_client_screen.dart';
+import 'package:ananasik_nails/presentation/mainScreen/screen/generalScreen/ribbonScreen/screen/zapisScreen/zapis_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -52,6 +53,11 @@ class ApplicationView extends StatelessWidget {
           case NotFoundScreen.routeName:
             return MaterialPageRoute(
                 builder: (context) => const NotFoundScreen());
+          case ZapisScreen.routeName: {
+            var msg = settings.arguments as Map<String, dynamic>;
+            return MaterialPageRoute(
+                builder: (context) => ZapisScreen(msg));
+          }
           default:
             return MaterialPageRoute(
                 builder: (context) => const NotFoundScreen());

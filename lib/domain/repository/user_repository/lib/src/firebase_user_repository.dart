@@ -164,19 +164,24 @@ class FirebaseUserRepository implements UserRepository {
       var uuid = const Uuid();
       final String randomId = uuid.v4();
       File imageFile = File(file);
-      Reference firebaseStoreRef =
-          FirebaseStorage.instance.ref().child('$userId/SpisokFotoRabot/${randomId}_lead');
+      Reference firebaseStoreRef = FirebaseStorage.instance
+          .ref()
+          .child('$userId/SpisokFotoRabot/${randomId}_lead');
       await firebaseStoreRef.putFile(imageFile);
       String url = await firebaseStoreRef.getDownloadURL();
-      DocumentSnapshot userSnapshot  = await manicuristCollection.doc(userId).get();
-      Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+      DocumentSnapshot userSnapshot =
+          await manicuristCollection.doc(userId).get();
+      Map<String, dynamic> userData =
+          userSnapshot.data() as Map<String, dynamic>;
       List<dynamic> currentPhotoList = userData['photoRabot'];
       if (currentPhotoList[0] != '') {
         currentPhotoList.add(url);
       } else {
         currentPhotoList[0] = url;
       }
-      await manicuristCollection.doc(userId).update({'photoRabot': currentPhotoList});
+      await manicuristCollection
+          .doc(userId)
+          .update({'photoRabot': currentPhotoList});
       return currentPhotoList;
     } catch (e) {
       log(e.toString());
@@ -185,8 +190,10 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   @override
-  Future<List<Map<String, int>>> uploadListUslug(String usluga, String cena, String userId) async {
-    DocumentSnapshot userSnapshot  = await manicuristCollection.doc(userId).get();
+  Future<List<Map<String, int>>> uploadListUslug(
+      String usluga, String cena, String userId) async {
+    DocumentSnapshot userSnapshot =
+        await manicuristCollection.doc(userId).get();
     Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
     List<dynamic> uslugiDynamicList = userData['uslugi'];
     List<Map<String, int>> currentUslugiList = [];
@@ -203,7 +210,96 @@ class FirebaseUserRepository implements UserRepository {
     } else {
       currentUslugiList[0] = {usluga: cena1};
     }
-    await manicuristCollection.doc(userId).update({'uslugi': currentUslugiList});
+    await manicuristCollection
+        .doc(userId)
+        .update({'uslugi': currentUslugiList});
     return currentUslugiList;
+  }
+
+  @override
+  Future<Map<DateTime, List<String>>> uploadListOkohek(
+      DateTime day, String formattedTime, String userId) async {
+    DocumentSnapshot userSnapshot =
+        await manicuristCollection.doc(userId).get();
+    Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+
+    // Ensure 'okohki' exists and is a Map<String, dynamic>
+    Map<String, dynamic> okohkiDynamic = userData['okohki'] ?? {};
+    Map<DateTime, List<String>> okohki = {};
+
+    okohkiDynamic.forEach((key, value) {
+      DateTime date = DateTime.parse(key);
+      List<String> eventList = List<String>.from(value);
+      okohki[date] = eventList;
+    });
+
+    if (okohki[day] != null) {
+      okohki[day]!.add(formattedTime);
+    } else {
+      okohki[day] = [formattedTime];
+    }
+
+    // Convert okohki back to Map<String, dynamic> for Firebase
+    Map<String, dynamic> okohkiToSave = okohki.map((key, value) => MapEntry(
+          key.toIso8601String(),
+          value,
+        ));
+
+    await manicuristCollection.doc(userId).update({'okohki': okohkiToSave});
+    return okohki;
+  }
+
+  @override
+  Future<void> saveZapisClient({
+    required String id,
+    required DateTime selectedDate,
+    required String selectedTime,
+    required String selectedService,
+    required int selectedPrice,
+    required String nameMaster,
+    required String emailMaster,
+  }) async {
+    try {
+      DocumentReference userDoc = clientCollection.doc(id);
+      CollectionReference zapis = userDoc.collection('zapis');
+      await zapis.doc(id).set({
+        'dateZapis': selectedDate,
+        'timeZapis': selectedTime,
+        'usluga': selectedService,
+        'price': selectedPrice,
+        'nameMaster': nameMaster,
+        'emailMaster': emailMaster,
+      });
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> saveZapisManicurist({
+    required String id,
+    required DateTime selectedDate,
+    required String selectedTime,
+    required String selectedService,
+    required int selectedPrice,
+    required String nameUser,
+    required String emailUser,
+  }) async {
+    try {
+      DocumentReference userDoc = manicuristCollection.doc(id);
+      CollectionReference zapis = userDoc.collection('zapis');
+      await zapis.doc(id).set({
+        'dateZapis': selectedDate,
+        'timeZapis': selectedTime,
+        'usluga': selectedService,
+        'price': selectedPrice,
+        'nameClient': nameUser,
+        'emailClient': emailUser,
+      });
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
   }
 }

@@ -2,7 +2,6 @@ import 'package:ananasik_nails/constants/styles/icons.dart';
 import 'package:ananasik_nails/constants/styles/images.dart';
 import 'package:ananasik_nails/constants/styles/styles_text_field.dart';
 import 'package:ananasik_nails/domain/repository/user_repository/lib/user_repository.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
